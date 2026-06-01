@@ -22,9 +22,9 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
     }
 }
 
-resource tableServices 'Microsoft.Storage/storageAccounts@2022-09-01' = {
+resource tableServices 'Microsoft.Storage/storageAccounts/tableServices@2022-09-01' = {
   parent: storageAccount
-   name: 'default'
+  name: 'default'
 }
 
 resource feedbackTable 'Microsoft.Storage/storageAccounts/tableServices/tables@2022-09-01' = {
