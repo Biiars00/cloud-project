@@ -1,55 +1,48 @@
 package com.tech.feedback_platform.service;
 
-import com.tech.feedback_platform.entity.Feedback;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.stereotype.Service;
+import jakarta.mail.*;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
+import java.util.Properties;
 
-@Service
-@RequiredArgsConstructor
 public class NotificationService {
 
-    private final JavaMailSender mailSender;
+    public void enviarEmail(String assunto, String corpo) {
+        String host = System.getenv("SMTP_HOST");
+        String port = System.getenv("SMTP_PORT");
+        final String usuario = System.getenv("SMTP_USER");
+        final String senha = System.getenv("SMTP_PASSWORD");
+        String destinatario = System.getenv("MAIL_TO");
 
-    @Value("${mail.to}")
-    private String destinatario;
+        // Se as configurações de e-mail não estiverem prontas, previne que a gravação do log caia
+        if (host == null || usuario == null) {
+            System.out.println("====== SIMULAÇÃO DE EMAIL CLOUD ======");
+            System.out.println("Assunto: " + assunto);
+            System.out.println("Corpo:\n" + corpo);
+            return;
+        }
 
-    public void enviarNotificacaoUrgente(Feedback feedback) {
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", host);
+        props.put("mail.smtp.port", port);
 
-        SimpleMailMessage email = new SimpleMailMessage();
+        Session session = Session.getInstance(props, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(usuario, senha);
+            }
+        });
 
-        email.setTo(destinatario);
-
-        email.setSubject("Feedback crítico");
-
-        email.setText("""
-                Novo feedback crítico recebido
-
-                Descrição: %s
-                Urgência: %s
-                Data: %s
-                """
-                .formatted(
-                        feedback.getDescricao(),
-                        feedback.getUrgencia(),
-                        feedback.getDataEnvio()
-                ));
-
-        mailSender.send(email);
-    }
-
-    public void enviarRelatorio(String mensagem) {
-
-        SimpleMailMessage email = new SimpleMailMessage();
-
-        email.setTo(destinatario);
-
-        email.setSubject("Relatório Semanal");
-
-        email.setText(mensagem);
-
-        mailSender.send(email);
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(usuario));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destinatario));
+            message.setSubject(assunto);
+            message.setText(corpo);
+            Transport.send(message);
+        } catch (MessagingException e) {
+            System.err.println("Erro ao disparar notificação Cloud por email: " + e.getMessage());
+        }
     }
 }

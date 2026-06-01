@@ -1,73 +1,60 @@
 package com.tech.feedback_platform.service;
 
-import com.tech.feedback_platform.entity.Feedback;
 import com.tech.feedback_platform.dto.FeedbackRequest;
 import com.tech.feedback_platform.dto.FeedbackResponse;
-import com.tech.feedback_platform.entity.UrgencyLevel;
+import com.tech.feedback_platform.entity.Feedback;
 import com.tech.feedback_platform.repository.FeedbackRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
-@Service
-@RequiredArgsConstructor
 public class FeedbackService {
-    private final FeedbackRepository repository;
-    private final NotificationService notificationService;
+
+    private final FeedbackRepository repository = new FeedbackRepository();
+    private final NotificationService notificationService = new NotificationService();
 
     public FeedbackResponse criar(FeedbackRequest request) {
+        String urgencia = calcularUrgencia(request.getNota());
+        String id = UUID.randomUUID().toString();
+        String dataEnvioStr = LocalDateTime.now().toString();
 
-        UrgencyLevel urgencia = calcularUrgencia(request.nota());
-
-        Feedback feedback = new Feedback(
-                UUID.randomUUID().toString(),
-                request.descricao(),
-                request.nota(),
-                urgencia,
-                LocalDateTime.now()
-        );
+        Feedback feedback = Feedback.builder()
+                .id(id)
+                .descricao(request.getDescricao())
+                .nota(request.getNota())
+                .urgencia(urgencia)
+                .dataEnvio(dataEnvioStr)
+                .build();
 
         repository.save(feedback);
 
-        if (urgencia == UrgencyLevel.URGENTE) {
-            notificationService.enviarNotificacaoUrgente(feedback);
+        if ("URGENTE".equals(urgencia)) {
+            String corpoEmail = """
+                    Novo feedback crítico recebido:
+                    
+                    Descrição: %s
+                    Urgência: %s
+                    Data de Envio: %s
+                    """.formatted(feedback.getDescricao(), feedback.getUrgencia(), feedback.getDataEnvio());
+
+            notificationService.enviarEmail("Alerta - Feedback Crítico Recebido", corpoEmail);
         }
 
-        return converter(feedback);
+        return FeedbackResponse.builder()
+                .id(feedback.getId())
+                .descricao(feedback.getDescricao())
+                .nota(feedback.getNota())
+                .urgencia(feedback.getUrgencia())
+                .dataEnvio(feedback.getDataEnvio())
+                .build();
     }
 
-    public List<FeedbackResponse> listar() {
-
-        return repository.findAll()
-                .stream()
-                .map(this::converter)
-                .toList();
-    }
-
-    private FeedbackResponse converter(Feedback feedback) {
-
-        return new FeedbackResponse(
-                feedback.getId(),
-                feedback.getDescricao(),
-                feedback.getNota(),
-                feedback.getUrgencia().name(),
-                feedback.getDataEnvio()
-        );
-    }
-
-    private UrgencyLevel calcularUrgencia(Integer nota) {
-
+    private String calcularUrgencia(Integer nota) {
         if (nota <= 4) {
-            return UrgencyLevel.URGENTE;
+            return "URGENTE";
+        } else if (nota <= 7) {
+            return "MEDIA";
         }
-
-        if (nota <= 7) {
-            return UrgencyLevel.MEDIA;
-        }
-
-        return UrgencyLevel.NORMAL;
+        return "NORMAL";
     }
 }
