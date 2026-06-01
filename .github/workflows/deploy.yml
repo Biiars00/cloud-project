@@ -18,38 +18,19 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Create Bicep Parameters File
-        env:
-          MY_SMTP_HOST: ${{ secrets.SMTP_HOST }}
-          MY_SMTP_PORT: ${{ secrets.SMTP_PORT }}
-          MY_SMTP_USER: ${{ secrets.SMTP_USER }}
-          MY_SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
-          MY_MAIL_TO: ${{ secrets.MAIL_TO }}
-        run: |
-          node -e '
-            const fs = require("fs");
-            const params = {
-              "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
-              "contentVersion": "1.0.0.0",
-              "parameters": {
-                "smtpHost": { "value": process.env.MY_SMTP_HOST },
-                "smtpPort": { "value": process.env.MY_SMTP_PORT },
-                "smtpUser": { "value": process.env.MY_SMTP_USER },
-                "smtpPassword": { "value": process.env.MY_SMTP_PASSWORD },
-                "mailTo": { "value": process.env.MY_MAIL_TO }
-              }
-            };
-            fs.writeFileSync("params.json", JSON.stringify(params, null, 2));
-          '
-
       - name: Deploy Azure Infrastructure (IaC)
         uses: azure/arm-deploy@v2
         with:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          resourceGroupName: rg-techchallenge4-prod
+          resourceGroupName: cloud-shell-storage-eastus
           template: ./main.bicep
-          parameters: ./params.json
           region: eastus
+          parameters: >
+            smtpHost=${{ secrets.SMTP_HOST }}
+            smtpPort=${{ secrets.SMTP_PORT }}
+            smtpUser=${{ secrets.SMTP_USER }}
+            smtpPassword=${{ secrets.SMTP_PASSWORD }}
+            mailTo=${{ secrets.MAIL_TO }}
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -58,8 +39,8 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Build and Package Project
-        run: mvn clean package azure-functions:package -Dmaven.test.skip=true
+      - name: Build Project with Maven
+        run: mvn clean package
 
       - name: Deploy Java Function to Azure
         uses: Azure/functions-action@v1
