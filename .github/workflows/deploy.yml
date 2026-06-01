@@ -31,7 +31,7 @@ jobs:
               "smtpPort": { "value": "${{ secrets.SMTP_PORT }}" },
               "smtpUser": { "value": "${{ secrets.SMTP_USER }}" },
               "smtpPassword": { "value": "${{ secrets.SMTP_PASSWORD }}" },
-              "mailTo": { "value": "${{ secrets.ADMIN_EMAIL }}" }
+              "mailTo": { "value": "${{ secrets.MAIL_TO }}" }
             }
 
       - name: Set up JDK 21
