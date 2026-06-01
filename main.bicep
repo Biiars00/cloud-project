@@ -15,7 +15,7 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
   sku: {
     name: 'Standard_LRS'
   }
-  kind: 'StorageV2',
+  kind: 'StorageV2'
   properties: {
       supportsHttpsTrafficOnly: true
       defaultToOAuthAuthentication: true
@@ -23,11 +23,13 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
 }
 
 resource tableServices 'Microsoft.Storage/storageAccounts@2022-09-01' = {
-  name: 'stfeedbackbiiaprod/default'
+  parent: storageAccount
+   name: 'default'
 }
 
 resource feedbackTable 'Microsoft.Storage/storageAccounts/tableServices/tables@2022-09-01' = {
-  name: 'stfeedbackbiiaprod/default/feedbacks'
+  parent: tableServices
+  name: 'feedbacks'
 }
 
 resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
