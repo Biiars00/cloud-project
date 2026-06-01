@@ -43,13 +43,15 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
 }
 
 resource hostingPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
-  name: 'plan-feedback-serverless'
+  name: 'plan-feedback-basic'
   location: location
   sku: {
-    name: 'Y1'
-    tier: 'Dynamic'
+    name: 'B1'
+    tier: 'Basic'
   }
-  properties: {}
+  properties: {
+      reserved: false
+  }
 }
 
 resource functionApp 'Microsoft.Web/sites@2022-03-01' = {
