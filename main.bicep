@@ -1,5 +1,6 @@
 param location string = resourceGroup().location
 param uniqueStringName string = uniqueString(resourceGroup().id)
+
 param smtpHost string
 param smtpPort string
 param smtpUser string
