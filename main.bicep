@@ -9,16 +9,16 @@ param smtpPassword string
 param mailTo string
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
-  name: 'stfeedbackbiiaprod'
+  name: 'stfeedbackbiiaprod2'
   location: location
   sku: {
     name: 'Standard_LRS'
   }
   kind: 'StorageV2'
   properties: {
-      supportsHttpsTrafficOnly: true
-      defaultToOAuthAuthentication: true
-    }
+    supportsHttpsTrafficOnly: true
+    defaultToOAuthAuthentication: true
+  }
 }
 
 resource tableServices 'Microsoft.Storage/storageAccounts/tableServices@2022-09-01' = {
@@ -43,14 +43,14 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
 }
 
 resource hostingPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
-  name: 'plan-feedback-basic'
+  name: 'plan-feedback-free'
   location: location
   sku: {
-    name: 'B1'
-    tier: 'Basic'
+    name: 'F1'
+    tier: 'Free'
   }
   properties: {
-      reserved: false
+    reserved: false
   }
 }
 
