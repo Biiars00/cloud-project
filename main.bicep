@@ -61,6 +61,7 @@ resource functionApp 'Microsoft.Web/sites@2022-03-01' = {
   properties: {
     serverFarmId: hostingPlan.id
     siteConfig: {
+      javaVersion: '21'
       appSettings: [
         {
           name: 'AzureWebJobsStorage'

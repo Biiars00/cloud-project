@@ -46,7 +46,7 @@ jobs:
         uses: azure/arm-deploy@v2
         with:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          resourceGroupName: cloud-shell-storage-eastus
+          resourceGroupName: rg-techchallenge4-prod
           template: ./main.bicep
           parameters: ./params.json
           region: eastus
