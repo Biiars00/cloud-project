@@ -43,26 +43,38 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
 }
 
 resource hostingPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
-  name: 'plan-feedback-free'
+  name: 'plan-feedback-consumption'
   location: location
   sku: {
-    name: 'F1'
-    tier: 'Free'
+    name: 'Y1'
+    tier: 'Dynamic'
+    size: 'Y1'
+    family: 'Y'
+    capacity: 0
   }
   properties: {
-    reserved: false
+    reserved: true
+    computeMode: 'Dynamic'
   }
 }
 
 resource functionApp 'Microsoft.Web/sites@2022-03-01' = {
   name: 'fnapp-feedback-platform'
   location: location
-  kind: 'functionapp'
+  kind: 'functionapp,linux'
   properties: {
+    reserved: true
     serverFarmId: hostingPlan.id
+    httpsOnly: true
     siteConfig: {
-      javaVersion: '21'
+      linuxFxVersion: 'JAVA|21'
+      ftpsState: 'Disabled'
+      minTlsVersion: '1.2'
       appSettings: [
+        {
+          name: 'WEBSITE_CONTENTSHARE'
+          value: 'fnapp-feedback-platform'
+        }
         {
           name: 'AzureWebJobsStorage'
           value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};AccountKey=${storageAccount.listKeys().keys[0].value};EndpointSuffix=${environment().suffixes.storage}'
