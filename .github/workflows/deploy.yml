@@ -49,7 +49,7 @@ jobs:
           resourceGroupName: cloud-shell-storage-eastus
           template: ./main.bicep
           parameters: ./params.json
-          region: eastus2
+          region: eastus
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
