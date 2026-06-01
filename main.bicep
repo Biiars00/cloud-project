@@ -10,7 +10,7 @@ param smtpPassword string
 param mailTo string
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
-  name: 'stfeedback${substring(uniqueStringName, 0, 8)}'
+  name: 'stfeedbackbiiaprod'
   location: location
   sku: {
     name: 'Standard_LRS'
