@@ -86,7 +86,7 @@
 				<configuration>
 					<appName>${functionAppName}</appName>
 					<resourceGroup>rg-techchallenge4-prod</resourceGroup>
-					<region>eastus</region>
+					<region>eastus2</region>
 					<hostJson>${project.basedir}/host.json</hostJson>
 					<localSettingsJson>${project.basedir}/local.settings.json</localSettingsJson>
 					<skipInstallExtensions>true</skipInstallExtensions>
