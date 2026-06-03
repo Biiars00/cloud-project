@@ -18,6 +18,8 @@
 		<azure.functions.java.library.version>3.1.0</azure.functions.java.library.version>
 		<functionAppName>fnapp-feedback-platform</functionAppName>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- Caminho padrao do func.exe no Windows (winget/MSI). Sobrescreva com -Dfunc.executable=... se necessario -->
+		<func.executable>${env.ProgramFiles}\Microsoft\Azure Functions Core Tools\func.exe</func.executable>
 	</properties>
 
 	<dependencies>
@@ -85,6 +87,9 @@
 					<appName>${functionAppName}</appName>
 					<resourceGroup>rg-techchallenge4-prod</resourceGroup>
 					<region>eastus</region>
+					<hostJson>${project.basedir}/host.json</hostJson>
+					<localSettingsJson>${project.basedir}/local.settings.json</localSettingsJson>
+					<skipInstallExtensions>true</skipInstallExtensions>
 					<runtime>
 						<os>linux</os>
 						<javaVersion>21</javaVersion>
@@ -105,6 +110,21 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+
+			<!-- Alternativa ao azure-functions:run quando func nao esta no PATH -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>3.5.0</version>
+				<configuration>
+					<executable>${func.executable}</executable>
+					<workingDirectory>${project.build.directory}/azure-functions/${functionAppName}</workingDirectory>
+					<arguments>
+						<argument>host</argument>
+						<argument>start</argument>
+					</arguments>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

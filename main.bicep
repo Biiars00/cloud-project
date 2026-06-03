@@ -46,15 +46,14 @@ resource hostingPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   name: 'plan-feedback-consumption'
   location: location
   sku: {
-    name: 'Y1'
-    tier: 'Dynamic'
-    size: 'Y1'
-    family: 'Y'
+    name: 'B1'
+    tier: 'Basic'
+    size: 'B1'
+    family: 'B'
     capacity: 0
   }
   properties: {
     reserved: true
-    computeMode: 'Dynamic'
   }
 }
 
