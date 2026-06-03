@@ -1,7 +1,7 @@
 package com.tech.feedback_platform.repository;
-
 import com.azure.data.tables.TableClient;
-import com.azure.data.tables.TableClientBuilder;
+import com.azure.data.tables.TableServiceClient;
+import com.azure.data.tables.TableServiceClientBuilder;
 import com.azure.data.tables.models.TableEntity;
 import com.tech.feedback_platform.entity.Feedback;
 
@@ -16,10 +16,13 @@ public class FeedbackRepository {
             throw new IllegalStateException("A variável de ambiente AzureWebJobsStorage não foi configurada.");
         }
 
-        return new TableClientBuilder()
+        TableServiceClient serviceClient = new TableServiceClientBuilder()
                 .connectionString(connectionString)
-                .tableName("feedbacks")
                 .buildClient();
+
+        serviceClient.createTableIfNotExists("feedbacks");
+
+        return serviceClient.getTableClient("feedbacks");
     }
 
     public void save(Feedback feedback) {
