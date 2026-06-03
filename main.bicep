@@ -42,28 +42,12 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
   }
 }
 
-resource hostingPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
-  name: 'plan-feedback-consumption'
-  location: location
-  sku: {
-    name: 'B1'
-    tier: 'Basic'
-    size: 'B1'
-    family: 'B'
-    capacity: 0
-  }
-  properties: {
-    reserved: true
-  }
-}
-
 resource functionApp 'Microsoft.Web/sites@2022-03-01' = {
   name: 'fnapp-feedback-platform'
   location: location
   kind: 'functionapp,linux'
   properties: {
     reserved: true
-    serverFarmId: hostingPlan.id
     httpsOnly: true
     siteConfig: {
       linuxFxVersion: 'JAVA|21'
