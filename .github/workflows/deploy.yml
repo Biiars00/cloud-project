@@ -59,4 +59,4 @@ jobs:
           cache: maven
 
       - name: Deploy Java Function to Azure
-        run: mvn clean package azure-functions:deploy -Dmaven.test.skip=true
+        run: mvn clean package azure-functions:deploy -Dmaven.test.skip=true -DfunctionAppName="fnapp-feedback-platform"
