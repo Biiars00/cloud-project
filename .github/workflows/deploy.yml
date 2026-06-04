@@ -79,4 +79,4 @@ jobs:
         uses: Azure/functions-action@v1
         with:
           app-name: 'fnapp-feedback-platform'
-          package: './target/azure-functions/feedback-platform'
+          package: './target/azure-functions/fnapp-feedback-platform'
