@@ -84,7 +84,7 @@
 				<artifactId>azure-functions-maven-plugin</artifactId>
 				<version>${azure.functions.maven.plugin.version}</version>
 				<configuration>
-					<appName>${functionAppName}</appName>
+					<appName>fnapp-feedback-platform</appName>
 					<resourceGroup>rg-techchallenge4-prod</resourceGroup>
 					<region>eastus2</region>
 					<hostJson>${project.basedir}/host.json</hostJson>
@@ -119,7 +119,7 @@
 				<version>3.5.0</version>
 				<configuration>
 					<executable>${func.executable}</executable>
-					<workingDirectory>${project.build.directory}/azure-functions/${functionAppName}</workingDirectory>
+					<workingDirectory>${project.build.directory}/azure-functions/fnapp-feedback-platform</workingDirectory>
 					<arguments>
 						<argument>host</argument>
 						<argument>start</argument>
