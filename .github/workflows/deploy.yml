@@ -59,7 +59,7 @@ jobs:
           cache: maven
 
       - name: Build and Package Project
-        run: mvn clean package -Dmaven.test.skip=true
+        run: mvn clean package azure-functions:deploy -Dmaven.test.skip=true
 
       - name: Deploy Java Function to Azure
         uses: Azure/functions-action@v1
