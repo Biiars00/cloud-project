@@ -102,15 +102,6 @@
 						</property>
 					</appSettings>
 				</configuration>
-				<executions>
-					<execution>
-						<id>package-execution</id>
-						<phase>package</phase>
-						<goals>
-							<goal>package</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>
