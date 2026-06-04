@@ -58,11 +58,5 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Build and Package Project
-        run: mvn clean package azure-functions:deploy -Dmaven.test.skip=true
-
       - name: Deploy Java Function to Azure
-        uses: Azure/functions-action@v1
-        with:
-          app-name: 'fnapp-feedback-platform'
-          package: './target/azure-functions/fnapp-feedback-platform'
+        run: mvn clean package azure-functions:deploy -Dmaven.test.skip=true
