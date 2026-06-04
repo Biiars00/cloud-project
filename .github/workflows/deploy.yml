@@ -58,8 +58,22 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      - name: Diagnostic - List Project Structure
+        run: |
+          echo "=== Listando a raiz do projeto ==="
+          ls -la
+          echo "=== Procurando arquivos .java no projeto ==="
+          find . -name "*.java"
+
       - name: Build and Package Project
         run: mvn clean package azure-functions:package -Dmaven.test.skip=true
+
+      - name: Diagnostic - List Target Output
+        run: |
+          echo "=== Verificando a pasta target ==="
+          ls -la target/ || echo "Pasta target não existe"
+          echo "=== Verificando subpastas dentro de target ==="
+          find target/ -maxdepth 3 || echo "Falha ao rodar find em target"
 
       - name: Deploy Java Function to Azure
         uses: Azure/functions-action@v1
