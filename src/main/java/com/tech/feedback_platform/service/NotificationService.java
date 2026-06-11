@@ -14,7 +14,6 @@ public class NotificationService {
         final String senha = System.getenv("SMTP_PASSWORD");
         String destinatario = System.getenv("MAIL_TO");
 
-        // Se as configurações de e-mail não estiverem prontas, previne que a gravação do log caia
         if (host == null || usuario == null) {
             System.out.println("====== SIMULAÇÃO DE EMAIL CLOUD ======");
             System.out.println("Assunto: " + assunto);
