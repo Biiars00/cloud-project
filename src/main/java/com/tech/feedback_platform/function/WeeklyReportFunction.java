@@ -23,7 +23,7 @@ public class WeeklyReportFunction {
 
     @FunctionName("GenerateWeeklyReport")
     public void run(
-            @TimerTrigger(name = "weeklyReportTrigger", schedule = "0 */5 * * * *") @SuppressWarnings("unused") String timerInfo,
+            @TimerTrigger(name = "weeklyReportTrigger", schedule = "0 0 0 1 */6 *") @SuppressWarnings("unused") String timerInfo,
             final ExecutionContext context) {
 
         context.getLogger().info("Geração automatizada de Relatório Periódico de Feedbacks iniciada.");
